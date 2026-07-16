@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Fatma &amp; Furkan — Düğün Davetiyesi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#faf7f0;
+    --cream-2:#f3eee2;
+    --panel:#f1ebdd;
+    --panel-2:#eae2cf;
+    --emboss:#e8e0cd;
+    --ink:#4e463a;
+    --ink-soft:#7d7466;
+    --sage:#8fa084;
+    --sage-deep:#66795b;
+    --gold:#b3924e;
+    --gold-soft:#d6c096;
+    --script:'Great Vibes','Snell Roundhand','Savoye LET','Segoe Script',cursive;
+    --serif:'Cormorant Garamond','Cormorant',Georgia,'Times New Roman',serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--serif);
+    color:var(--ink);
+    background:var(--cream);
+    font-size:19px;
+  }
+
+  /* =========================================================
+     ZARF AÇILIŞI — ilk ekran, videodaki gibi iki kanatlı kapak
+     ========================================================= */
+  #gate{
+    position:fixed;inset:0;z-index:50;
+    perspective:1400px;
+    background:var(--cream-2);
+    overflow:hidden;
+    transition:opacity 1s ease .9s, visibility 0s 2s;
+  }
+  #gate.opened{opacity:0;visibility:hidden;pointer-events:none}
+  .panel{
+    position:absolute;top:0;height:100%;width:50.5%;
+    background:linear-gradient(105deg,var(--panel) 0%,var(--panel-2) 100%);
+    transition:transform 1.8s cubic-bezier(.55,0,.25,1);
+    overflow:hidden;
+    backface-visibility:hidden;
+  }
+  .panel.left{left:0;transform-origin:left center;box-shadow:inset -14px 0 24px -16px rgba(78,70,58,.35)}
+  .panel.right{right:0;transform-origin:right center;background:linear-gradient(255deg,var(--panel) 0%,var(--panel-2) 100%);box-shadow:inset 14px 0 24px -16px rgba(78,70,58,.35)}
+  #gate.opened .panel.left{transform:rotateY(-155deg)}
+  #gate.opened .panel.right{transform:rotateY(155deg)}
+  /* kabartma çiçek dokusu */
+  .panel svg{position:absolute;width:150%;height:auto;opacity:.9;filter:drop-shadow(0 1px 0 rgba(255,255,255,.9)) drop-shadow(0 -1px 1px rgba(78,70,58,.12))}
+  .panel.left svg.top{top:-6%;left:-18%}
+  .panel.left svg.bottom{bottom:-6%;left:-18%;transform:scaleY(-1)}
+  .panel.right svg.top{top:-6%;right:-18%;transform:scaleX(-1)}
+  .panel.right svg.bottom{bottom:-6%;right:-18%;transform:scale(-1)}
+  /* mühür */
+  #sealBtn{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:96px;height:96px;border-radius:50%;
+    border:none;cursor:pointer;z-index:5;
+    background:radial-gradient(circle at 35% 30%,#e9dab4,#d3bd8b 55%,#b89b62);
+    box-shadow:0 10px 26px rgba(78,70,58,.35), inset 0 0 0 5px rgba(250,247,240,.35), inset 0 2px 6px rgba(255,255,255,.6);
+    color:#8a7040;
+    font-family:var(--script);font-size:38px;
+    transition:transform .6s ease,opacity .6s ease;
+    animation:pulse 2.6s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{box-shadow:0 10px 26px rgba(78,70,58,.35), inset 0 0 0 5px rgba(250,247,240,.35), 0 0 0 0 rgba(179,146,78,.35)}50%{box-shadow:0 10px 26px rgba(78,70,58,.35), inset 0 0 0 5px rgba(250,247,240,.35), 0 0 0 18px rgba(179,146,78,0)}}
+  #gate.opened #sealBtn{transform:translate(-50%,-50%) scale(.3);opacity:0;pointer-events:none;animation:none}
+  #gateHint{
+    position:absolute;left:0;right:0;bottom:9vh;z-index:5;
+    text-align:center;font-size:15px;letter-spacing:.34em;text-transform:uppercase;
+    color:var(--ink-soft);text-indent:.34em;
+    transition:opacity .5s ease;
+  }
+  #gate.opened #gateHint{opacity:0}
+  @media (prefers-reduced-motion:reduce){
+    .panel{transition:opacity .6s ease}
+    #gate.opened .panel{opacity:0;transform:none}
+  }
+
+  /* ---------- kaydırmalı bölümler ---------- */
+  main{height:100dvh;overflow-y:auto;scroll-snap-type:y mandatory}
+  section{
+    position:relative;min-height:100dvh;scroll-snap-align:start;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:6vh 26px;overflow:hidden;background:var(--cream);
+  }
+  section:nth-of-type(even){background:var(--cream-2)}
+
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity 1.1s ease,transform 1.1s ease}
+  .reveal.on{opacity:1;transform:none}
+  .d1{transition-delay:.15s}.d2{transition-delay:.35s}.d3{transition-delay:.55s}.d4{transition-delay:.75s}
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    html{scroll-behavior:auto}
+  }
+
+  /* ---------- tipografi ---------- */
+  .names{
+    font-family:var(--script);font-weight:400;color:var(--ink);
+    font-size:clamp(60px,17vw,100px);line-height:1.12;
+  }
+  .amp{font-family:var(--script);color:var(--gold);font-size:clamp(38px,10vw,60px);display:block;line-height:.9}
+  .kicker{
+    letter-spacing:.4em;text-transform:uppercase;font-size:15px;font-weight:600;
+    color:var(--ink-soft);text-indent:.4em;
+  }
+  .script-line{font-family:var(--script);font-size:clamp(36px,10vw,52px);color:var(--sage-deep)}
+  .rule{width:70px;height:1px;background:var(--gold-soft);margin:24px auto;position:relative}
+  .rule::after{
+    content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;
+    border:1px solid var(--gold);transform:translate(-50%,-50%) rotate(45deg);background:var(--cream);
+  }
+
+  .corner{position:absolute;width:min(46vw,230px);height:auto;pointer-events:none;opacity:.9}
+  .corner.tl{top:-12px;left:-16px}
+  .corner.tr{top:-12px;right:-16px;transform:scaleX(-1)}
+  .corner.bl{bottom:-12px;left:-16px;transform:scaleY(-1)}
+  .corner.br{bottom:-12px;right:-16px;transform:scale(-1)}
+  .corner.soft{opacity:.45;width:min(36vw,180px)}
+
+  .down{
+    position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+    color:var(--gold);font-size:24px;opacity:.85;text-decoration:none;
+    animation:float 2.4s ease-in-out infinite;
+  }
+  @keyframes float{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+  /* ---------- 1: kapak ---------- */
+  #kapak .kicker{margin-bottom:28px}
+  #kapak .script-line{margin-top:28px}
+
+  /* ---------- 2: aileler ---------- */
+  .fam{margin:28px 0}
+  .fam-name{
+    font-size:clamp(28px,8vw,40px);font-weight:600;letter-spacing:.14em;
+    text-transform:uppercase;text-indent:.14em;color:var(--ink);line-height:1.4;
+  }
+  .fam-ve{font-family:var(--script);color:var(--gold);font-size:clamp(30px,8vw,40px);margin:18px 0}
+  .fam-note{max-width:30ch;margin:28px auto 0;font-size:20px;font-style:italic;color:var(--ink-soft);line-height:1.7}
+
+  /* ---------- 3: tarih ---------- */
+  .date-block{display:flex;align-items:center;justify-content:center;gap:22px;margin:28px 0 8px}
+  .date-side{font-size:17px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);text-indent:.3em}
+  .date-day{
+    font-size:clamp(72px,22vw,108px);color:var(--sage-deep);font-weight:500;line-height:1;
+    padding:0 10px;border-left:1px solid var(--gold-soft);border-right:1px solid var(--gold-soft);
+  }
+  .date-year{font-size:26px;letter-spacing:.5em;color:var(--ink);text-indent:.5em;margin-top:6px;font-weight:500}
+  .time{font-size:24px;margin-top:20px;color:var(--ink)}
+  .time b{color:var(--sage-deep);font-weight:700}
+  .count{display:flex;gap:12px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+  .count div{min-width:72px;padding:14px 8px;background:var(--cream);border:1px solid var(--gold-soft);border-radius:4px}
+  section:nth-of-type(odd) .count div{background:var(--cream-2)}
+  .count b{display:block;font-size:32px;color:var(--sage-deep);font-weight:600}
+  .count span{font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+
+  /* ---------- 4: konum ---------- */
+  .venue{font-size:clamp(30px,8.5vw,40px);font-weight:700;margin-top:22px;color:var(--ink)}
+  .venue-city{font-size:19px;font-weight:600;letter-spacing:.2em;color:var(--ink-soft);margin-top:10px;text-transform:uppercase;text-indent:.2em}
+  .pin{width:48px;height:auto;margin-top:26px;color:var(--sage-deep)}
+  .map-btn{
+    display:inline-flex;align-items:center;gap:12px;margin-top:32px;padding:17px 38px;
+    background:var(--sage-deep);color:#fdfbf6;
+    font-family:var(--serif);font-size:18px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    border:none;border-radius:2px;text-decoration:none;
+    box-shadow:0 12px 24px -12px rgba(102,121,91,.6);
+    transition:transform .25s ease;
+  }
+  .map-btn:active{transform:scale(.97)}
+  .map-note{margin-top:18px;font-size:16px;font-style:italic;color:var(--ink-soft)}
+
+  /* ---------- 5: teşekkür ---------- */
+  .thanks{font-family:var(--script);font-size:clamp(56px,17vw,92px);color:var(--ink)}
+  .thanks-sub{max-width:28ch;margin:26px auto 0;font-size:20px;font-style:italic;color:var(--ink-soft);line-height:1.75}
+  .thanks-names{font-family:var(--script);font-size:clamp(30px,8.5vw,40px);color:var(--gold);margin-top:32px}
+</style>
+</head>
+<body>
+
+<!-- ZARF AÇILIŞI -->
+<div id="gate">
+  <div class="panel left">
+    <svg class="top" viewBox="0 0 200 200" aria-hidden="true"><use href="#emboss"/></svg>
+    <svg class="bottom" viewBox="0 0 200 200" aria-hidden="true"><use href="#emboss"/></svg>
+  </div>
+  <div class="panel right">
+    <svg class="top" viewBox="0 0 200 200" aria-hidden="true"><use href="#emboss"/></svg>
+    <svg class="bottom" viewBox="0 0 200 200" aria-hidden="true"><use href="#emboss"/></svg>
+  </div>
+  <button id="sealBtn" aria-label="Davetiyeyi aç">F&amp;F</button>
+  <p id="gateHint">Davetiyeyi açmak için mühre dokunun</p>
+</div>
+
+<main id="main">
+
+  <!-- 1 · KAPAK -->
+  <section id="kapak">
+    <svg class="corner tl" viewBox="0 0 200 200" aria-hidden="true"><use href="#floral"/></svg>
+    <svg class="corner br" viewBox="0 0 200 200" aria-hidden="true"><use href="#floral"/></svg>
+    <p class="kicker reveal">Düğünümüze Davetlisiniz</p>
+    <h1 class="names reveal d1">Fatma<span class="amp">&amp;</span>Furkan</h1>
+    <div class="rule reveal d2"></div>
+    <p class="script-line reveal d2">Evleniyoruz</p>
+    <a class="down" href="#aileler" aria-label="Aşağı kaydır">&#10549;</a>
+  </section>
+
+  <!-- 2 · AİLELER -->
+  <section id="aileler">
+    <svg class="corner tl soft" viewBox="0 0 200 200" aria-hidden="true"><use href="#floral"/></svg>
+    <svg class="corner br soft" viewBox="0 0 200 200" aria-hidden="true"><use href="#floral"/></svg>
+    <p class="kicker reveal">Aileler</p>
+    <div class="fam reveal d1">
+      <p class="fam-name">Güler Ailesi</p>
+      <p class="fam-ve">ve</p>
+      <p class="fam-name">Gündüz Ailesi</p>
+    </div>
+    <div class="rule reveal d2"></div>
+    <p class="fam-note reveal d3">Bu mutlu günümüzde sizleri aramızda görmekten onur duyarız.</p>
+    <a class="down" href="#tarih" aria-label="Aşağı kaydır">&#10549;</a>
+  </section>
+
+  <!-- 3 · TARİH -->
+  <section id="tarih">
+    <svg class="corner tr soft" viewBox="0 0 200 200" aria-hidden="true"><use href="#floral"/></svg>
+    <svg class="corner bl soft" viewBox="0 0 200 200" aria-hidden="true"><use href="#floral"/></svg>
+    <p class="kicker reveal">Ne Zaman?</p>
+    <div class="date-block reveal d1">
+      <span class="date-side">Ağustos</span>
+      <span class="date-day">21</span>
+      <span class="date-side">Cuma</span>
+    </div>
+    <p class="date-year reveal d1">2026</p>
+    <p class="time reveal d2">Saat <b>19:00</b></p>
+    <div class="count reveal d3" id="count">
+      <div><b id="cd">0</b><span>Gün</span></div>
+      <div><b id="ch">0</b><span>Saat</span></div>
+      <div><b id="cm">0</b><span>Dakika</span></div>
+      <div><b id="cs">0</b><span>Saniye</span></div>
+    </div>
+    <a class="down" href="#konum" aria-label="Aşağı kaydır">&#10549;</a>
+  </section>
+
+  <!-- 4 · KONUM -->
+  <section id="konum">
+    <svg class="corner tl soft" viewBox="0 0 200 200" aria-hidden="true"><use href="#floral"/></svg>
+    <svg class="corner br soft" viewBox="0 0 200 200" aria-hidden="true"><use href="#floral"/></svg>
+    <p class="kicker reveal">Nerede?</p>
+    <svg class="pin reveal d1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+      <path d="M12 21s-7-6.1-7-11a7 7 0 1 1 14 0c0 4.9-7 11-7 11Z"/>
+      <circle cx="12" cy="10" r="2.6"/>
+    </svg>
+    <h2 class="venue reveal d1">Başaran Düğün Salonu</h2>
+    <p class="venue-city reveal d2">Kastamonu / Taşköprü</p>
+    <a class="map-btn reveal d3" href="https://www.google.com/maps?q=41.493698,34.206921" target="_blank" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 21s-7-6.1-7-11a7 7 0 1 1 14 0c0 4.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+      Yol Tarifi Al
+    </a>
+    <p class="map-note reveal d4">Butona dokunduğunuzda harita uygulamasında konum açılır</p>
+    <a class="down" href="#tesekkur" aria-label="Aşağı kaydır">&#10549;</a>
+  </section>
+
+  <!-- 5 · TEŞEKKÜR -->
+  <section id="tesekkur">
+    <svg class="corner tl" viewBox="0 0 200 200" aria-hidden="true"><use href="#floral"/></svg>
+    <svg class="corner tr" viewBox="0 0 200 200" aria-hidden="true"><use href="#floral"/></svg>
+    <svg class="corner bl" viewBox="0 0 200 200" aria-hidden="true"><use href="#floral"/></svg>
+    <svg class="corner br" viewBox="0 0 200 200" aria-hidden="true"><use href="#floral"/></svg>
+    <h2 class="thanks reveal">Teşekkürler</h2>
+    <div class="rule reveal d1"></div>
+    <p class="thanks-sub reveal d2">Hayatımızın en güzel gününde bizimle olacağınız için şimdiden teşekkür ederiz.</p>
+    <p class="thanks-names reveal d3">Fatma &amp; Furkan</p>
+  </section>
+
+</main>
+
+<!-- motifler -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- renkli suluboya yeşillik (iç sayfalar) -->
+    <g id="floral">
+      <g stroke="#7d9174" stroke-width="1.3" fill="none" opacity=".85">
+        <path d="M8,4 C 40,30 60,70 66,120"/>
+        <path d="M4,10 C 26,44 34,86 30,138"/>
+        <path d="M14,2 C 60,18 104,36 138,42"/>
+      </g>
+      <g fill="#a8b8a0" opacity=".75">
+        <ellipse cx="30" cy="26" rx="11" ry="6" transform="rotate(38 30 26)"/>
+        <ellipse cx="46" cy="46" rx="12" ry="6.5" transform="rotate(46 46 46)"/>
+        <ellipse cx="58" cy="72" rx="11" ry="6" transform="rotate(58 58 72)"/>
+        <ellipse cx="64" cy="98" rx="10" ry="5.5" transform="rotate(70 64 98)"/>
+        <ellipse cx="46" cy="14" rx="10" ry="5.5" transform="rotate(16 46 14)"/>
+        <ellipse cx="76" cy="26" rx="11" ry="6" transform="rotate(20 76 26)"/>
+        <ellipse cx="104" cy="34" rx="10" ry="5.5" transform="rotate(14 104 34)"/>
+      </g>
+      <g fill="#8fa084" opacity=".7">
+        <ellipse cx="18" cy="46" rx="10" ry="5.5" transform="rotate(66 18 46)"/>
+        <ellipse cx="26" cy="76" rx="10" ry="5" transform="rotate(76 26 76)"/>
+        <ellipse cx="30" cy="106" rx="9" ry="5" transform="rotate(84 30 106)"/>
+        <ellipse cx="128" cy="40" rx="9" ry="5" transform="rotate(10 128 40)"/>
+      </g>
+      <g fill="#d6c096" opacity=".8">
+        <circle cx="12" cy="12" r="3.4"/>
+        <circle cx="52" cy="30" r="2.6"/>
+        <circle cx="40" cy="62" r="2.4"/>
+        <circle cx="92" cy="20" r="2.4"/>
+      </g>
+    </g>
+    <!-- kabartma (fildişi üstüne fildişi) — zarf kapakları için -->
+    <g id="emboss" fill="#e8e0cd">
+      <g stroke="#e2d9c3" stroke-width="1.6" fill="none">
+        <path d="M8,4 C 40,30 60,70 66,120"/>
+        <path d="M4,10 C 26,44 34,86 30,138"/>
+        <path d="M14,2 C 60,18 104,36 138,42"/>
+        <path d="M10,8 C 50,60 90,90 150,110"/>
+      </g>
+      <ellipse cx="30" cy="26" rx="12" ry="6.5" transform="rotate(38 30 26)"/>
+      <ellipse cx="46" cy="46" rx="13" ry="7" transform="rotate(46 46 46)"/>
+      <ellipse cx="58" cy="72" rx="12" ry="6.5" transform="rotate(58 58 72)"/>
+      <ellipse cx="64" cy="98" rx="11" ry="6" transform="rotate(70 64 98)"/>
+      <ellipse cx="46" cy="14" rx="11" ry="6" transform="rotate(16 46 14)"/>
+      <ellipse cx="76" cy="26" rx="12" ry="6.5" transform="rotate(20 76 26)"/>
+      <ellipse cx="104" cy="34" rx="11" ry="6" transform="rotate(14 104 34)"/>
+      <ellipse cx="18" cy="46" rx="11" ry="6" transform="rotate(66 18 46)"/>
+      <ellipse cx="26" cy="76" rx="11" ry="5.5" transform="rotate(76 26 76)"/>
+      <ellipse cx="30" cy="106" rx="10" ry="5.5" transform="rotate(84 30 106)"/>
+      <ellipse cx="128" cy="40" rx="10" ry="5.5" transform="rotate(10 128 40)"/>
+      <ellipse cx="96" cy="70" rx="12" ry="6.5" transform="rotate(34 96 70)"/>
+      <ellipse cx="118" cy="90" rx="11" ry="6" transform="rotate(30 118 90)"/>
+      <!-- güller -->
+      <g>
+        <circle cx="150" cy="150" r="20"/>
+        <circle cx="150" cy="150" r="13" fill="#e2d9c3"/>
+        <circle cx="150" cy="150" r="7" fill="#e8e0cd"/>
+        <circle cx="112" cy="168" r="13"/>
+        <circle cx="112" cy="168" r="7" fill="#e2d9c3"/>
+      </g>
+    </g>
+  </defs>
+</svg>
+
+<script>
+  // Zarf kapaklarının açılması
+  var gate = document.getElementById('gate');
+  document.getElementById('sealBtn').addEventListener('click', function(){
+    gate.classList.add('opened');
+    // Kapak açıldıktan sonra ilk sayfa içeriği belirsin
+    setTimeout(function(){
+      document.querySelectorAll('#kapak .reveal').forEach(function(el){ el.classList.add('on'); });
+    }, 900);
+    // Animasyon bitince katmanı tamamen kaldır
+    setTimeout(function(){ gate.remove(); }, 2400);
+  });
+
+  // Bölüm içerikleri kaydırdıkça belirsin
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('on'); }
+    });
+  },{threshold:.25});
+  document.querySelectorAll('section:not(#kapak) .reveal').forEach(function(el){ io.observe(el); });
+
+  // Geri sayım — 21 Ağustos 2026, 19:00 (Türkiye saati)
+  var target = new Date('2026-08-21T19:00:00+03:00').getTime();
+  function pad(n){ return n < 10 ? '0' + n : n; }
+  function tick(){
+    var diff = target - Date.now();
+    if(diff < 0) diff = 0;
+    document.getElementById('cd').textContent = Math.floor(diff/86400000);
+    document.getElementById('ch').textContent = pad(Math.floor(diff/3600000)%24);
+    document.getElementById('cm').textContent = pad(Math.floor(diff/60000)%60);
+    document.getElementById('cs').textContent = pad(Math.floor(diff/1000)%60);
+  }
+  tick();
+  setInterval(tick, 1000);
+</script>
+</body>
+</html>
